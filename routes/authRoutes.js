@@ -1,21 +1,28 @@
 // routes/authRoutes.js
 const express = require("express");
-const router = express.Router(); // Create an Express Router instance
-const authController = require("../controllers/authController"); // Import your controller functions
-const authMiddleware = require("../middleware/authMiddleware"); // Import your middleware
+const router = express.Router(); 
+const authController = require("../controllers/authController"); 
+const authMiddleware = require("../middleware/authMiddleware"); 
 
-// Define authentication routes
+
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
-// Example of a protected route
+
 router.get("/profile", authMiddleware.authenticateToken, (req, res) => {
-  // This route is only accessible if the token is valid
+  
   res.json({
     message: `Welcome to your profile, ${req.user.username}!`,
     userId: req.user.userId,
   });
 });
+
+// NEW: Forgot Password Routes
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password/:token', authController.resetPassword);
+
+// NEW: Google OAuth Routes
+router.post('/google-login', authController.googleLogin); // Frontend sends Google ID token here
 
 // You can define other auth-related routes here (e.g., /forgot-password, /reset-password)
 
